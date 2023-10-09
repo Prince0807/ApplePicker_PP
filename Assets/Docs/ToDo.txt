@@ -1,0 +1,38 @@
+. Implement:
+  . AppleTree
+    . Basic Movement (moving on a given direction left/right with a given speed) - OK
+    . Changing of direction on the sides (bouncing)                              - OK
+    . Changing of direction randomly based on a random distribution (odds)       - OK
+    . Instatiate (drop) the apples                                               - OK
+
+  . Apple
+    . Add a rigid body so it falls on gravity upon instatiation                  - OK
+    
+    . Kill the apples that:
+      . touch the basket (add to score)                                          - OK
+      . fall in the ground (kill a basket)                                       - OK
+    . Add layers for AppleTree, Apple and Basket; modify the collision matrix in physics panel  -- OK
+  . Basket 
+    . Trigger to "catch" apples                                                  - OK
+  . Add an empty with a GameController script                                    - OK
+    . Provide basic properties for the game                                      - OK
+    . Instantiate the baskets here                                               - OK
+
+  . Score/HighScore                                                              - OK
+
+
+
+
+AR=16:6
+
+H/2=16 => H=32
+
+W:H=16/9=W/32 => W=32*16/9 = 56.88 ~ 57
+
+.1 % 
+ . of frames => 10 frames 1 dir.change => in 1 sec=60 frames => 10 dir.changes
+ . of seconds 
+
+.1 /60 = 1/600
+
+.001 1/1000

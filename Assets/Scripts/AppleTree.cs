@@ -14,18 +14,34 @@ public class AppleTree : MonoBehaviour
     
     void Start()
     {
-
+        StartCoroutine(DropApple());
     }
     
     void Update()
     {
-        //Move
-        //Check for dir. change and change dir. if becessary
-        //check for appl drop and drop if necessary
+        // Move the AppleTree
+        
+        Vector3 newPosition = transform.position;
+        newPosition.x += speedInMPerSec * Time.deltaTime;
+        transform.position = newPosition;
+
+        // Check for direction change
+        if (newPosition.x < -leftAndRightEdge || newPosition.x > leftAndRightEdge)
+        {
+            if (Random.value < chanceOfDirectionChange)
+            {
+                speedInMPerSec *= -1; // Change direction
+            }
+        }
     }
     
-    void FixeUpdate()
+    IEnumerator DropApple()
     {
+        GameObject apple = Instantiate(applePrefab);
+        apple.transform.position = transform.position;
 
+        yield return new WaitForSeconds(1/appleDropFrquency);
+
+        StartCoroutine(DropApple());
     }
 }
