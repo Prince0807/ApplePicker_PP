@@ -1,47 +1,72 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AppleTree : MonoBehaviour
 {
     public GameObject applePrefab;
-    public float speedInMPerSec = 2f;
-    public float leftAndRightEdge = 10f;
-    public float chanceOfDirectionChange = 0.1f; //10% chance to change dirction
-    public float appleDropFrquency = 2; //2 apples per second => .5 sec delay => fps/2 frames delay between applae drops
-    //private float fps = 1f / Time.inFixedTimeStep;
-    //private float speedInMPerFrame=
     
+    public float speedInMPerSec=2f; // m/frame = m/s * Time.deltaTime
+
+    public float leftAndRightEdge = 25f;
+
+    public float chanceOfDirectionChange = 0.1f; //10% chance to change dirction
+
+    public float appleDropFrequency = 2; //2 apples per second => .5 sec delay => fps/2 frames delay between applae drops
+
+    //private float fps = 1f / Time.inFixedTimeStep; 
+    //private float speedInMPerFrame=
+    // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(DropApple());
+        //Simple apple drop
+        InvokeRepeating("DropApple", 1, 1f / appleDropFrequency);
     }
-    
+
+    void DropApple()
+    {
+        Instantiate(applePrefab,this.transform.position,Quaternion.identity);
+    }
+
+    // Update is called once per frame
     void Update()
     {
-        // Move the AppleTree
-        
-        Vector3 newPosition = transform.position;
-        newPosition.x += speedInMPerSec * Time.deltaTime;
-        transform.position = newPosition;
+        Move();
+        CheckForDirChangeAndChangeIfNecessary();
+        CheckForAppleDropAndDropIfNecessary();
+    }
 
-        // Check for direction change
-        if (newPosition.x < -leftAndRightEdge || newPosition.x > leftAndRightEdge)
+    private void CheckForAppleDropAndDropIfNecessary()
+    {
+        if(UnityEngine.Random.value < chanceOfDirectionChange)
         {
-            if (Random.value < chanceOfDirectionChange)
-            {
-                speedInMPerSec *= -1; // Change direction
-            }
+            speedInMPerSec *= -1;
+            Move();
         }
     }
-    
-    IEnumerator DropApple()
+
+    private void CheckForDirChangeAndChangeIfNecessary()
     {
-        GameObject apple = Instantiate(applePrefab);
-        apple.transform.position = transform.position;
+        // ..........|-----------------O------------------|.............
+        Vector3 pos = this.transform.position;
+        if(pos.x> leftAndRightEdge)
+        {
+            speedInMPerSec *= -1;
+            pos.x = leftAndRightEdge;
+            this.transform.position = pos;
+        }
+        else if (pos.x < -leftAndRightEdge)
+        {
+            speedInMPerSec *= -1;
+            pos.x = -leftAndRightEdge;
+            this.transform.position = pos;
+        }
+        else
+            return;
+    }
 
-        yield return new WaitForSeconds(1/appleDropFrquency);
-
-        StartCoroutine(DropApple());
+    private void Move()
+    {
+        Vector3 pos = this.transform.position;
+        pos.x = pos.x+speedInMPerSec * Time.deltaTime;
+        this.transform.position = pos;
     }
 }

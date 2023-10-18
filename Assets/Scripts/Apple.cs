@@ -1,21 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Apple : MonoBehaviour
 {
-    private void OnCollisionEnter(Collision collision)
+    public float KillZoneY = -20f;
+
+    void Update()
     {
-        if(collision.gameObject.tag == "Basket")
+        if (this.transform.position.y < KillZoneY)
         {
-            GameController.Instance.score++;
+            GameController gameController = FindObjectOfType<GameController>();
+            
+            if (gameController != null)
+                gameController.AppleMissed();
+            
             Destroy(gameObject);
         }
-        if (collision.gameObject.tag == "Ground")
-        {
-            GameObject basket = FindObjectOfType<Basket>().gameObject;
-            if (basket != null)
-                Destroy(basket);
-        }
+        
     }
 }

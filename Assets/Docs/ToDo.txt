@@ -9,16 +9,16 @@
     . Add a rigid body so it falls on gravity upon instatiation                  - OK
     
     . Kill the apples that:
-      . touch the basket (add to score)                                          - OK
+      . touch the basket (add to score)
       . fall in the ground (kill a basket)                                       - OK
-    . Add layers for AppleTree, Apple and Basket; modify the collision matrix in physics panel  -- OK
+    . Add layers for AppleTree, Apple and Basket; modify the collision matrix in physics panel 
   . Basket 
-    . Trigger to "catch" apples                                                  - OK
-  . Add an empty with a GameController script                                    - OK
-    . Provide basic properties for the game                                      - OK
-    . Instantiate the baskets here                                               - OK
+    . Trigger to "catch" apples
+  . Add an empty with a GameController script
+    . Provide basic properties for the game
+    . Instantiate the baskets here
 
-  . Score/HighScore                                                              - OK
+  . Score/HighScore
 
 
 

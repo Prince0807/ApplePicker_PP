@@ -1,30 +1,44 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    public static GameController Instance;
+    [SerializeField] GameObject basketPrefab;
+    [SerializeField] int numberOfBaskets = 3;
+    [SerializeField] float basketBottomY = -14f;
+    [SerializeField] float basketSpacing = 2f;
+    
+    [HideInInspector] public List<GameObject> basketList;
 
-    [SerializeField] private GameObject basketPrefab;
-
-    [HideInInspector] public int score = 0;
-
-    private void Awake()
+    void Start()
     {
-        Instance = this;
-    }
-
-    public GameObject SpawnBasket()
-    {
-        return Instantiate(basketPrefab, Vector3.zero, Quaternion.identity);
-    }
-
-    public void SaveScore()
-    {
-        if(PlayerPrefs.GetInt("HighScore", 0) < score)
+        basketList = new List<GameObject>();
+        for (int i = 0; i < numberOfBaskets; i++)
         {
-            PlayerPrefs.SetInt("HighScore", score);
+            GameObject basket = Instantiate(basketPrefab);
+            Vector3 pos = Vector3.zero;
+            pos.y = basketBottomY + i * basketSpacing;
+            basket.transform.position = pos;
+            basketList.Add(basket);
+        }
+    }
+    public void AppleMissed()
+    {
+        GameObject[] apples=GameObject.FindGameObjectsWithTag("Apple");
+        
+        foreach(var appleGO in apples)
+            Destroy(appleGO);
+
+        int basketIndex = basketList.Count - 1;
+        GameObject basketGO = basketList[basketIndex];
+        basketList.RemoveAt(basketIndex);
+        Destroy(basketGO);
+        
+        //if there are no baskets, reload the scene
+        if (basketList.Count == 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }
