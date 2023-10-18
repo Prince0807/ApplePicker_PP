@@ -15,24 +15,38 @@ public class Basket : MonoBehaviour
     void Update()
     {
         Vector3 mousePosition = Input.mousePosition;
-        print("mousePosition="+ mousePosition);
         mousePosition.z = -Camera.main.transform.position.z;
         Vector3 mousePosition3D=Camera.main.ScreenToWorldPoint(mousePosition);
-        print("mousePosition3D=" + mousePosition3D);
         Vector3 pos=this.transform.position;
         pos.x = mousePosition3D.x;
         this.transform.position = pos;
-
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Apple"))
-        {
+        Apple apple = collision.gameObject.GetComponent<Apple>();
 
-            Destroy(collision.gameObject);
-            scoreCounter.score += 100;
-            HighScore.TRY_SET_HIGH_SCORE(scoreCounter.score);
+        if (apple.type == AppleType.Red)
+            ScoreCounter.Instance.AddScore(100);
+        else if (apple.type == AppleType.Blue)
+            ScoreCounter.Instance.AddScore(200);
+        else if (apple.type == AppleType.Black)
+        {
+            GameController gameController = FindObjectOfType<GameController>();
+
+            if (gameController != null)
+                gameController.AppleMissed();
         }
+        else if(apple.type == AppleType.AppleOfEdan)
+        {
+            GameController gameController = FindObjectOfType<GameController>();
+
+            if (gameController != null)
+                gameController.AddBasket();
+        }
+
+        Destroy(apple.gameObject);
+        SoundManager.Instance.PlayAudio(SoundManager.Instance.pointsAddedClip);
+        HighScore.TRY_SET_HIGH_SCORE(ScoreCounter.Instance.score);
     }
 }

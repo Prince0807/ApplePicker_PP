@@ -3,18 +3,36 @@ using UnityEngine;
 public class Apple : MonoBehaviour
 {
     public float KillZoneY = -20f;
+    public AppleType type;
+
+    [SerializeField] private GameController gameController;
+
+    private void Awake()
+    {
+        gameController = FindObjectOfType<GameController>();
+    }
 
     void Update()
     {
-        if (this.transform.position.y < KillZoneY)
+        if(type == AppleType.Red && transform.position.y < KillZoneY)
         {
-            GameController gameController = FindObjectOfType<GameController>();
-            
             if (gameController != null)
                 gameController.AppleMissed();
-            
-            Destroy(gameObject);
         }
-        
+        DestroyAppleWhenBelowKillZone();
     }
+
+    void DestroyAppleWhenBelowKillZone()
+    {
+        if (this.transform.position.y < KillZoneY)
+            Destroy(gameObject);
+    }
+}
+
+public enum AppleType
+{
+    Red,
+    Blue,
+    Black,
+    AppleOfEdan
 }

@@ -34,11 +34,23 @@ public class GameController : MonoBehaviour
         GameObject basketGO = basketList[basketIndex];
         basketList.RemoveAt(basketIndex);
         Destroy(basketGO);
+
+        SoundManager.Instance.PlayAudio(SoundManager.Instance.BasketDestroyedClip);
         
         //if there are no baskets, reload the scene
         if (basketList.Count == 0)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+    }
+
+    public void AddBasket()
+    {
+        GameObject basket = Instantiate(basketPrefab);
+        Vector3 pos = Vector3.zero;
+        pos.y = basketBottomY + basketList.Count * basketSpacing;
+        basket.transform.position = pos;
+        basketList.Add(basket);
+        SoundManager.Instance.PlayAudio(SoundManager.Instance.BasketAddedClip);
     }
 }

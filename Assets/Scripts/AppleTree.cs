@@ -3,7 +3,10 @@ using UnityEngine;
 public class AppleTree : MonoBehaviour
 {
     public GameObject applePrefab;
-    
+    public GameObject blueApplePrefab;
+    public GameObject blackApplePrefab;
+    public GameObject appleOfEdanPrefab;
+
     public float speedInMPerSec=2f; // m/frame = m/s * Time.deltaTime
 
     public float leftAndRightEdge = 25f;
@@ -23,7 +26,7 @@ public class AppleTree : MonoBehaviour
 
     void DropApple()
     {
-        Instantiate(applePrefab,this.transform.position,Quaternion.identity);
+        Instantiate(GetRandomApplePrefab(),this.transform.position,Quaternion.identity);
     }
 
     // Update is called once per frame
@@ -68,5 +71,19 @@ public class AppleTree : MonoBehaviour
         Vector3 pos = this.transform.position;
         pos.x = pos.x+speedInMPerSec * Time.deltaTime;
         this.transform.position = pos;
+    }
+
+    public GameObject GetRandomApplePrefab()
+    {
+        int randomInt = Random.Range(0, 1000);
+
+        if (randomInt % 50 == 0)
+            return appleOfEdanPrefab;
+        else if (randomInt % 25 == 0)
+            return blackApplePrefab;
+        else if (randomInt % 7 == 0)
+            return blueApplePrefab;
+        else
+            return applePrefab;
     }
 }

@@ -5,19 +5,22 @@ using UnityEngine.UI;
 
 public class ScoreCounter : MonoBehaviour
 {
+    public static ScoreCounter Instance;
+
+
     [Header("Dynamic")]
     public int score = 0;
     public Text uiText;
-    // Start is called before the first frame update
-    void Start()
+
+    private void Awake()
     {
-        //uiText = GetComponent<Text>();
+        Instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void AddScore(int add)
     {
-        uiText.text = $"Score: {score}";// + score.ToString();
-        
+        score += add;
+        uiText.text = $"Score: {score}";
+        HighScore.TRY_SET_HIGH_SCORE(score);
     }
 }
