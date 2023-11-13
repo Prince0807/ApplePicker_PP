@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ScoreCounter : MonoBehaviour
 {
     public static ScoreCounter Instance;
-
+    public GameObject HighScorePanel;
 
     [Header("Dynamic")]
     public int score = 0;
@@ -22,5 +22,8 @@ public class ScoreCounter : MonoBehaviour
         score += add;
         uiText.text = $"Score: {score}";
         HighScore.TRY_SET_HIGH_SCORE(score);
+
+        if (score > PlayerPrefs.GetInt("HighScore"))
+            HighScorePanel.SetActive(true);
     }
 }

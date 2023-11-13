@@ -1,52 +1,48 @@
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Basket : MonoBehaviour
 {
-    public GameObject scoreGO;
-    public ScoreCounter scoreCounter;
+    public Text scoreTxt;
+    public int scoreForOneApple = 1;
+    int score = 0;
+    // Start is called before the first frame update
     void Start()
     {
-        scoreGO = GameObject.Find("ScoreCounter"); // GetComponent<GameObject>();
-        scoreCounter=scoreGO.GetComponent<ScoreCounter>();
+        scoreTxt = GameObject.Find("Score").GetComponent<Text>();
+        scoreTxt.text = "Score:0";
     }
+
     // Update is called once per frame
     void Update()
     {
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = -Camera.main.transform.position.z;
-        Vector3 mousePosition3D=Camera.main.ScreenToWorldPoint(mousePosition);
-        Vector3 pos=this.transform.position;
-        pos.x = mousePosition3D.x;
-        this.transform.position = pos;
+        MoveBasket();
+        
+    }
+
+    private void MoveBasket()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        Debug.Log(mousePos);
+        mousePos.z = -Camera.main.transform.position.z;
+        Vector3 mousePosWorld = Camera.main.ScreenToWorldPoint(mousePos);
+
+        Vector3 pos = transform.position;
+        pos.x = mousePosWorld.x;
+        transform.position = pos;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        Apple apple = collision.gameObject.GetComponent<Apple>();
-
-        if (apple.type == AppleType.Red)
-            ScoreCounter.Instance.AddScore(100);
-        else if (apple.type == AppleType.Blue)
-            ScoreCounter.Instance.AddScore(200);
-        else if (apple.type == AppleType.Black)
+        if (collision.gameObject.tag == "Apple")
         {
-            GameController gameController = FindObjectOfType<GameController>();
-
-            if (gameController != null)
-                gameController.AppleMissed();
+            score += scoreForOneApple;
+            scoreTxt.text = string.Format("Score: {0}", score);
+            //change UI (increase nr of apples collected)
+            Destroy(collision.gameObject);
         }
-        else if(apple.type == AppleType.AppleOfEdan)
-        {
-            GameController gameController = FindObjectOfType<GameController>();
-
-            if (gameController != null)
-                gameController.AddBasket();
-        }
-
-        Destroy(apple.gameObject);
-        SoundManager.Instance.PlayAudio(SoundManager.Instance.pointsAddedClip);
-        HighScore.TRY_SET_HIGH_SCORE(ScoreCounter.Instance.score);
     }
 }

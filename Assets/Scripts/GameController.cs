@@ -1,56 +1,34 @@
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] GameObject basketPrefab;
-    [SerializeField] int numberOfBaskets = 3;
-    [SerializeField] float basketBottomY = -14f;
-    [SerializeField] float basketSpacing = 2f;
-    
-    [HideInInspector] public List<GameObject> basketList;
+    public static GameController S;
 
+    public GameObject basketPrefab;
+    public int numBaskets = 3;
+    public List<GameObject> baskets;
+    public float bottomY = -14;
+    public float basketIntervalY = 2f;
+    // Start is called before the first frame update
     void Start()
     {
-        basketList = new List<GameObject>();
-        for (int i = 0; i < numberOfBaskets; i++)
+        S = this;
+        baskets = new List<GameObject>();
+        for(int i = 0; i < numBaskets; i++)
         {
-            GameObject basket = Instantiate(basketPrefab);
+            GameObject basketGO = Instantiate<GameObject>(basketPrefab);
             Vector3 pos = Vector3.zero;
-            pos.y = basketBottomY + i * basketSpacing;
-            basket.transform.position = pos;
-            basketList.Add(basket);
-        }
-    }
-    public void AppleMissed()
-    {
-        GameObject[] apples=GameObject.FindGameObjectsWithTag("Apple");
-        
-        foreach(var appleGO in apples)
-            Destroy(appleGO);
-
-        int basketIndex = basketList.Count - 1;
-        GameObject basketGO = basketList[basketIndex];
-        basketList.RemoveAt(basketIndex);
-        Destroy(basketGO);
-
-        SoundManager.Instance.PlayAudio(SoundManager.Instance.BasketDestroyedClip);
-        
-        //if there are no baskets, reload the scene
-        if (basketList.Count == 0)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            pos.y = bottomY + i * basketIntervalY;
+            basketGO.transform.position = pos;
+            baskets.Add(basketGO);
         }
     }
 
-    public void AddBasket()
+    // Update is called once per frame
+    void Update()
     {
-        GameObject basket = Instantiate(basketPrefab);
-        Vector3 pos = Vector3.zero;
-        pos.y = basketBottomY + basketList.Count * basketSpacing;
-        basket.transform.position = pos;
-        basketList.Add(basket);
-        SoundManager.Instance.PlayAudio(SoundManager.Instance.BasketAddedClip);
+        
     }
 }

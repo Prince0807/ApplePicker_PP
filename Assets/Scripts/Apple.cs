@@ -1,38 +1,19 @@
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Apple : MonoBehaviour
 {
-    public float KillZoneY = -20f;
-    public AppleType type;
+    public static float killY = -20f; 
+    // Start is called before the first frame update
 
-    [SerializeField] private GameController gameController;
-
-    private void Awake()
-    {
-        gameController = FindObjectOfType<GameController>();
-    }
-
+    // Update is called once per frame
     void Update()
     {
-        if(type == AppleType.Red && transform.position.y < KillZoneY)
+        if (this.transform.position.y < killY)
         {
-            if (gameController != null)
-                gameController.AppleMissed();
+            Destroy(this.gameObject);
         }
-        DestroyAppleWhenBelowKillZone();
+        
     }
-
-    void DestroyAppleWhenBelowKillZone()
-    {
-        if (this.transform.position.y < KillZoneY)
-            Destroy(gameObject);
-    }
-}
-
-public enum AppleType
-{
-    Red,
-    Blue,
-    Black,
-    AppleOfEdan
 }
